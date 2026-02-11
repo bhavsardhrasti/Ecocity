@@ -1,0 +1,5 @@
+- [x] Create UserDashboard.js component with sections: Eco Points, Complaints, Bins, Waste Stats, Raise Complaint, Nearby Smart Bins, My Complaints/Status, Waste Segregation Guide, Notifications, Profile/Logout
+- [x] Update Navbar.js to add Login, Register, and Get Started buttons
+- [x] Update App.js to add /dashboard route
+- [x] Update Login.js to navigate to /dashboard on login
+- [x] Add styles for dashboard in index.css if needed

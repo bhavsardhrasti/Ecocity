@@ -1,0 +1,1 @@
+- [x] Edit myapp/src/App.js to add <ReportSection /> in the home page route after <Benefits /> and before <Footer />

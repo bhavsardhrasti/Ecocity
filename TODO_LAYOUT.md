@@ -1,0 +1,2 @@
+- [x] Update myapp/src/components/ReportSection.js to improve card layout with better structure for form fields
+- [x] Update myapp/src/index.css to add styles for report-section, report-card, report-header, report-form, form-row, form-group, submit-btn

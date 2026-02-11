@@ -1,0 +1,9 @@
+- [x] Update index.css to set navbar link color to white
+- [x] Implement proper navigation: scroll to sections on home page, navigate to contact page from top
+- [x] Create ScrollToTop component to ensure contact page starts from top
+- [x] Update App.js to include ScrollToTop
+- [x] Create ReportSection component with complaint form in card layout
+- [x] Add ReportSection to home page
+- [x] Remove /report route from App.js
+- [x] Remove Report link from Navbar.js
+- [x] Update styles for report card in index.css
