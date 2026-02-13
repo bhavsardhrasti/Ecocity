@@ -303,67 +303,118 @@ function SmartFeatures({ bins = [], scheduledCollections = [] }) {
 
         {/* Routes Tab */}
         {activeTab === 'routes' && (
-          <div className="routes-panel" data-aos="fade-in">
-            <h3>🚛 Collection Routes</h3>
-            <p className="panel-description">Optimized routes for truck drivers to efficiently collect waste</p>
+          <div className="routes-container" data-aos="fade-in">
+            <div className="routes-main-header">
+              <div className="routes-title-block">
+                <span className="routes-main-icon">🚛</span>
+                <div>
+                  <h2>Collection Routes</h2>
+                  <p>Optimized routes for efficient waste collection</p>
+                </div>
+              </div>
+              <div className="routes-summary">
+                <div className="summary-item">
+                  <span className="summary-value">{routes.length}</span>
+                  <span className="summary-label">Routes</span>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-value">{routes.reduce((acc, r) => acc + r.stops.length, 0)}</span>
+                  <span className="summary-label">Total Stops</span>
+                </div>
+              </div>
+            </div>
 
             {routes.length === 0 ? (
-              <div className="no-routes">
-                <span className="no-routes-icon">🚛</span>
-                <p>No routes available. Add bins to generate optimized routes.</p>
+              <div className="no-routes-message">
+                <div className="no-routes-icon">🚛</div>
+                <h3>No Routes Available</h3>
+                <p>Select bins to generate optimized collection routes</p>
               </div>
             ) : (
-              routes.map(route => (
-                <div key={route.id} className="route-card" data-aos="fade-up">
-                  <div className="route-header">
-                    <h4>{route.name}</h4>
-                    <div className="route-stats">
-                      <span className="route-stat">📍 {route.stops.length} stops</span>
-                      <span className="route-stat">🛣️ {route.totalDistance} km</span>
-                      <span className="route-stat">⏱️ {route.estimatedDuration} min</span>
+              <div className="routes-cards-container">
+                {routes.map((route, routeIndex) => (
+                  <div 
+                    key={route.id} 
+                    className="route-main-card"
+                    data-aos="fade-up"
+                    data-aos-delay={routeIndex * 150}
+                  >
+                    {/* Route Header */}
+                    <div className="route-main-header">
+                      <div className="route-main-title">
+                        <div className="route-number-badge">{routeIndex + 1}</div>
+                        <div>
+                          <h3>{route.name}</h3>
+                          <span className="route-subtitle">Collection Route</span>
+                        </div>
+                      </div>
+                      <div className="route-main-badge">
+                        {route.stops.length} Stops
+                      </div>
+                    </div>
+
+                    {/* Route Quick Info */}
+                    <div className="route-quick-info">
+                      <div className="quick-info-item">
+                        <span className="quick-icon">🕐</span>
+                        <span className="quick-text">{route.startTime}</span>
+                      </div>
+                      <div className="quick-info-item">
+                        <span className="quick-icon">⏱️</span>
+                        <span className="quick-text">{route.estimatedDuration} min</span>
+                      </div>
+                      <div className="quick-info-item">
+                        <span className="quick-icon">🛣️</span>
+                        <span className="quick-text">{route.totalDistance} km</span>
+                      </div>
+                    </div>
+
+                    {/* Route Stops */}
+                    <div className="route-stops-section">
+                      <h4 className="stops-section-title">📍 Route Stops</h4>
+                      <div className="stops-list-container">
+                        {route.stops.map((stop, index) => (
+                          <div 
+                            key={stop.id} 
+                            className="stop-main-item"
+                            style={{ borderLeftColor: getSeverityColor(stop.priority.toLowerCase()) }}
+                          >
+                            <div className="stop-main-number">{index + 1}</div>
+                            <div className="stop-main-details">
+                              <div className="stop-main-header">
+                                <span className="stop-main-bin">Bin #{stop.binId}</span>
+                                <span 
+                                  className="stop-main-priority"
+                                  style={{ backgroundColor: getSeverityColor(stop.priority.toLowerCase()) }}
+                                >
+                                  {stop.priority}
+                                </span>
+                              </div>
+                              <div className="stop-main-location">
+                                📍 {stop.area}, {stop.city}
+                              </div>
+                              <div className="stop-main-meta">
+                                <span>Fill: {stop.fillLevel}%</span>
+                                <span>⏱️ {stop.estimatedTime} min</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Route Actions */}
+                    <div className="route-main-actions">
+                      <button className="route-main-btn primary">
+                        📋 View Full Route
+                      </button>
+                      <button className="route-main-btn secondary">
+                        📍 Start Navigation
+                      </button>
                     </div>
                   </div>
-
-                  <div className="route-details">
-                    <p><strong>Start Time:</strong> {route.startTime}</p>
-                    <p><strong>Instructions:</strong> Follow the stops in order. High priority bins are marked first.</p>
-                  </div>
-
-                  <div className="route-stops">
-                    <h5>Route Stops:</h5>
-                    {route.stops.map((stop, index) => (
-                      <div
-                        key={stop.id}
-                        className="route-stop"
-                        style={{ borderLeft: `4px solid ${getSeverityColor(stop.priority.toLowerCase())}` }}
-                        data-aos="fade-up"
-                        data-aos-delay={index * 50}
-                      >
-                        <div className="stop-header">
-                          <span className="stop-number">{index + 1}</span>
-                          <span className="stop-bin">Bin #{stop.binId}</span>
-                          <span
-                            className="stop-priority"
-                            style={{ backgroundColor: getSeverityColor(stop.priority.toLowerCase()) }}
-                          >
-                            {stop.priority}
-                          </span>
-                        </div>
-                        <div className="stop-details">
-                          <p><strong>Location:</strong> {stop.area}, {stop.city}</p>
-                          <p><strong>Fill Level:</strong> {stop.fillLevel}%</p>
-                          <p><strong>Est. Time:</strong> {stop.estimatedTime} min from start</p>
-                        </div>
-                        {stop.priority === 'Critical' && (
-                          <div className="stop-warning">
-                            ⚠️ Urgent collection required - bin is critically full!
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         )}

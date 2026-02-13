@@ -52,7 +52,7 @@ const AboutSection = () => {
         <div style={styles.missionGrid} data-aos="fade-up" data-aos-delay="800">
           <div style={styles.missionImageContainer} data-aos="fade-right">
             <img
-              src="https://img.freepik.com/premium-vector/ecology-concept-background-flat-style_23-2148244504.jpg?w=360"
+              src="https://api.bongotechnology.com/storage/content-images/image_J7ni0TwXzR.jpg"
               alt="Engineers working on IoT"
               style={styles.missionImage}
             />

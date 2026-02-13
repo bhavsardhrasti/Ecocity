@@ -829,7 +829,7 @@ function SmartBins() {
         {/* State and City Selection */}
         <div className="location-selector" data-aos="fade-up">
           <div className="selector-group">
-            <label htmlFor="state-select">Select State:</label>
+            <label htmlFor="state-select">📍 Select State</label>
             <select
               id="state-select"
               value={selectedState}
@@ -844,7 +844,7 @@ function SmartBins() {
           </div>
 
           <div className="selector-group">
-            <label htmlFor="city-select">Select City:</label>
+            <label htmlFor="city-select">🏙️ Select City</label>
             <select
               id="city-select"
               value={selectedCity}
@@ -863,27 +863,62 @@ function SmartBins() {
         {/* Display bins for selected state and city */}
         {selectedState && selectedCity && (
           <div className="districts-container" data-aos="fade-up">
-            <h3 className="selected-location-title">
-              {selectedCity}, {selectedState}
-            </h3>
+            <div className="selected-location-header">
+              <h3 className="selected-location-title">
+                📍 {selectedCity}, {selectedState}
+              </h3>
+            </div>
             <div className="areas-grid">
               {getAreasForCity(selectedState, selectedCity).map(area => (
                 <div key={area.name} className="area-card" data-aos="zoom-in">
-                  <h4 className="area-title">{area.name}</h4>
+                  <h4 className="area-title">📌 {area.name}</h4>
                   <div className="bins-in-area">
                     {area.bins.map(bin => (
                       <div key={bin.id} className="bin-card" data-aos="zoom-in">
                         <div className="bin-header">
                           <span className="bin-icon">{getStatusColor(bin.status)}</span>
-                          <h5>Bin {bin.id}</h5>
+                          <h3>Bin {bin.id}</h3>
+                          <span className={`bin-status-badge ${bin.status.toLowerCase()}`}>
+                            {bin.status}
+                          </span>
                         </div>
-                        <p>Status: {bin.status}</p>
-                        <p>Fill Level: {bin.fillLevel}%</p>
-                        <p>Last Collected: {bin.lastCollected}</p>
-                        <div className="controls">
-                          <button onClick={() => updateBinStatus(bin.id, 'Empty')}>Empty</button>
-                          <button onClick={() => updateBinStatus(bin.id, 'Medium')}>Medium</button>
-                          <button onClick={() => updateBinStatus(bin.id, 'Full')}>Full</button>
+                        <div className="bin-info">
+                          <div className="bin-info-item">
+                            <span className="bin-info-label">📅 Last Collected</span>
+                            <span className="bin-info-value">{bin.lastCollected}</span>
+                          </div>
+                        </div>
+                        <div className="fill-level-container">
+                          <div className="fill-level-label">
+                            <span>Fill Level</span>
+                            <span>{bin.fillLevel}%</span>
+                          </div>
+                          <div className="fill-level-bar">
+                            <div 
+                              className={`fill-level-progress ${bin.status.toLowerCase()}`}
+                              style={{ width: `${bin.fillLevel}%` }}
+                            />
+                          </div>
+                        </div>
+                        <div className="bin-actions">
+                          <button 
+                            className="empty-btn" 
+                            onClick={() => updateBinStatus(bin.id, 'Empty')}
+                          >
+                            🟢 Empty
+                          </button>
+                          <button 
+                            className="medium-btn" 
+                            onClick={() => updateBinStatus(bin.id, 'Medium')}
+                          >
+                            🟡 Medium
+                          </button>
+                          <button 
+                            className="full-btn" 
+                            onClick={() => updateBinStatus(bin.id, 'Full')}
+                          >
+                            🔴 Full
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -896,12 +931,14 @@ function SmartBins() {
 
         {!selectedState && (
           <div className="selection-prompt" data-aos="fade-up">
+            <span className="selection-prompt-icon">🗺️</span>
             <p>Please select a state to view smart bin status.</p>
           </div>
         )}
 
         {selectedState && !selectedCity && (
           <div className="selection-prompt" data-aos="fade-up">
+            <span className="selection-prompt-icon">🏙️</span>
             <p>Please select a city in {selectedState} to view smart bin status.</p>
           </div>
         )}
@@ -911,23 +948,40 @@ function SmartBins() {
         <h2>Bin Location Map</h2>
         <p className="map-description">View all smart bins and their real-time status on the interactive map below.</p>
         {bins.length > 0 ? (
-          <MapComponent 
-            bins={bins} 
-            complaints={scheduledCollections.map(c => ({
-              id: c.id,
-              lat: bins.find(b => b.area === c.area)?.lat || 20.5937,
-              lng: bins.find(b => b.area === c.area)?.lng || 78.9629,
-              type: c.issue,
-              description: c.notes,
-              status: c.status,
-              date: c.scheduledTime
-            }))}
-            center={[bins[0].lat, bins[0].lng]}
-            zoom={12}
-            showFilters={true}
-          />
+          <div className="map-container">
+            <MapComponent 
+              bins={bins} 
+              complaints={scheduledCollections.map(c => ({
+                id: c.id,
+                lat: bins.find(b => b.area === c.area)?.lat || 20.5937,
+                lng: bins.find(b => b.area === c.area)?.lng || 78.9629,
+                type: c.issue,
+                description: c.notes,
+                status: c.status,
+                date: c.scheduledTime
+              }))}
+              center={[bins[0].lat, bins[0].lng]}
+              zoom={12}
+              showFilters={true}
+            />
+            <div className="map-legend">
+              <div className="legend-item">
+                <span className="legend-icon empty"></span>
+                <span>Empty (0-40%)</span>
+              </div>
+              <div className="legend-item">
+                <span className="legend-icon medium"></span>
+                <span>Medium (41-80%)</span>
+              </div>
+              <div className="legend-item">
+                <span className="legend-icon full"></span>
+                <span>Full (81-100%)</span>
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="selection-prompt" data-aos="fade-up">
+            <span className="selection-prompt-icon">🗺️</span>
             <p>Please select a state and city to view bin locations on the map.</p>
           </div>
         )}
@@ -946,17 +1000,28 @@ function SmartBins() {
           <div className="schedule-grid">
             {schedule.map((item, index) => (
               <div key={index} className="schedule-card" data-aos="zoom-in" data-aos-delay={index * 100} onClick={() => handleScheduleClick(item)}>
-                <h3>{item.day}</h3>
-                <p>State: {item.state}</p>
-                <p>District: {item.district}</p>
-                <p>Area: {item.area}</p>
-                <p>Time: {item.time}</p>
-                <button className="schedule-btn">Schedule Collection</button>
+                <span className="schedule-day">📅 {item.day}</span>
+                <h3>📍 {item.area}</h3>
+                <div className="schedule-info">
+                  <div className="schedule-info-item">
+                    <span className="schedule-label">🗺️ State</span>
+                    <span className="schedule-value">{item.state}</span>
+                  </div>
+                  <div className="schedule-info-item">
+                    <span className="schedule-label">🏙️ District</span>
+                    <span className="schedule-value">{item.district}</span>
+                  </div>
+                </div>
+                <div className="schedule-time">
+                  🕐 {item.time}
+                </div>
+                <button className="schedule-btn">📋 Schedule Collection</button>
               </div>
             ))}
           </div>
         ) : (
           <div className="selection-prompt" data-aos="fade-up">
+            <span className="selection-prompt-icon">📅</span>
             <p>Please select a state and city to view waste collection schedule.</p>
           </div>
         )}
